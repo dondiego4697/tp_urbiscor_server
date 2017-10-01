@@ -12,7 +12,7 @@ export class OPlace extends Base implements IPlace {
     id: number;
     creatorId: number;
     categoryId: number;
-    point: Array<number>
+    point: Array<number>;
 
     constructor(data: IPlace){
         super(data, ['creatorId', 'categoryId', 'point']);

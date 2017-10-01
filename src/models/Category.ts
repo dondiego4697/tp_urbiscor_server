@@ -16,4 +16,15 @@ export class OCategory extends Base implements ICategory{
         this.slug = data.slug;
         this.name = data.name;
     }
+
+    getDataOnUpdate() {
+        let hash = {};
+        return ['slug', 'name'].reduce((result, item) => {
+            if (this[item]) {
+                let key = hash[item] ? hash[item] : item;
+                result[key] = this[item];
+            }
+            return result;
+        }, {});
+    }
 }
