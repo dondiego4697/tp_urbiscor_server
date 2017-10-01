@@ -36,21 +36,24 @@ user_id | INT
 place_id| INT
 
 ### Response interface (JSON)
-{
-	result: 'OK' | 'ERR',
-	statusCode: number,
-	errorDescription: string,
-	data: Array
-}
+    {
+	    result: 'OK' | 'ERR',
+	    statusCode: number,
+	    errorDescription: string,
+	    data: Array
+    }
 ### Methods
 #### /api/user/
 
 POST /create - создать user-а
 ```{login, password}```
+
 GET /get-subscriptions/:userId - получить все места, на которые подписан user
 ```/?limit&offset&desc```
+
 GET /get-places/:userId - получить все места, которые создал user
 ```/?limit&offset&desc```
+
 GET /get/:userId - получить user-а
 
 #### /api/category/
@@ -70,13 +73,17 @@ GET /get-all- все события
 
 GET /get-subscribers/:placeId - получить пользователей, подписанных на событие
 ```/?limit&offset```
+
 GET /get-around- получить события, которые находятся в диапазоне заданной точки 
 ```/?lat&lng&limit&offset&step```
-	step - значение в метрах, указывающее в каком диапазоне искать
+step - значение в метрах, указывающее в каком диапазоне искать
+	
 GET /subscribe - подписаться на событие
 ```/?userId&placeId```
+
 GET /unsubscribe - отписаться с события
 ```/?userId&placeId```
+
 DELETE /delete - удалить событие
 
     {
