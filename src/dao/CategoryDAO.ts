@@ -18,23 +18,6 @@ export default class CategoryDAO {
         }
     };
 
-    public static async update(pool, id: number, updateData: any): Promise<Array<ICategory>> {
-        const data = createPreSqlRequest(id, updateData);
-        const client = await pool.connect();
-        try {
-            const query = {
-                text: `UPDATE category SET (${data.keysStr}) = (${data.indexStr}) WHERE id=$1 RETURNING *;`,
-                values: data.argsArr
-            };
-            const res = await client.query(query);
-            return res.rows;
-        } catch (err) {
-            throw err;
-        } finally {
-            client.release();
-        }
-    };
-
     public static async getAll(pool): Promise<Array<ICategory>> {
         const client = await pool.connect();
         try {

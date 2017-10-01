@@ -1,3 +1,6 @@
+/**
+ * Method just in code
+ */
 import {OCategory} from '../../../../src/models/Category';
 import {sendData, SUCCESS, WRONG_PARAMS} from '../../../../src/support/http';
 import CategoryDAO from '../../../../src/dao/CategoryDAO';
