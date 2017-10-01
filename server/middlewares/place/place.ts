@@ -16,8 +16,8 @@ module.exports = (pool) => {
         .get('/get-subscribers/:placeId', getPlaceSubscribersMiddleware(pool))
         .get('/get-around/', getAroundPlaceMiddleware(pool))
         .get('/get-all', getAllMiddleware(pool))
-        .post('/delete/', deletePlaceMiddleware(pool))
+        .delete('/delete/', deletePlaceMiddleware(pool))
         .post('/update/', updatePlaceMiddleware(pool))
-        .post('/subscribe/', subscribeUserOnPlaceMiddleware(pool))
-        .post('/unsubscribe/', unsubscribeUserOnPlaceMiddleware(pool));
+        .get('/subscribe/', subscribeUserOnPlaceMiddleware(pool))
+        .get('/unsubscribe/', unsubscribeUserOnPlaceMiddleware(pool));
 };

@@ -1,20 +1,25 @@
 import {IPlace} from "../models/Place";
 
 export default class PlaceDAO {
-    public static async getAll(pool, limit: number, offset: number): Promise<Array<IPlace>> {
+    public static async getAll(pool, limit: number, offset: number, desc: string): Promise<Array<IPlace>> {
         const client = await pool.connect();
         try {
             const query = {
                 text: `SELECT
                         place.id,
-                        ST_AsText(place.point),
+                        ST_AsText(place.point) as point,
+                        place.description,
+                        place.title,
                         place.created,
+                        users.id as user_id,
                         users.login as user_login,
+                        category.id as category_id,
                         category.slug as category_slug,
                         category.name as category_name
                        FROM place
                        JOIN users ON users.id = place.creator_id
                        JOIN category ON category.id = place.category_id
+                        ORDER BY place.created ${desc}
                         LIMIT $1
                         OFFSET $2`,
                 values: [limit, offset]
@@ -32,9 +37,9 @@ export default class PlaceDAO {
         const client = await pool.connect();
         try {
             const query = {
-                text: `INSERT INTO place (category_id, creator_id, point)
-                 VALUES ($1, $2, st_geogfromtext('POINT(${place.point[0]} ${place.point[1]})')) RETURNING *;`,
-                values: [place.categoryId, place.creatorId]
+                text: `INSERT INTO place (category_id, creator_id, description, title, point)
+                 VALUES ($1, $2, $3, $4, st_geogfromtext('POINT(${place.point[0]} ${place.point[1]})')) RETURNING *;`,
+                values: [place.categoryId, place.creatorId, place.description, place.title]
             };
             const res = await client.query(query);
             return res.rows;
@@ -77,6 +82,16 @@ export default class PlaceDAO {
             data.indexStr.push(`$${index++}`);
             data.argsArr.push(updateData.category_id);
         }
+        if (updateData.description) {
+            data.keysStr.push('description');
+            data.indexStr.push(`$${index++}`);
+            data.argsArr.push(updateData.description);
+        }
+        if (updateData.title) {
+            data.keysStr.push('title');
+            data.indexStr.push(`$${index++}`);
+            data.argsArr.push(updateData.title);
+        }
         const client = await pool.connect();
         try {
             const query = {
@@ -98,9 +113,13 @@ export default class PlaceDAO {
             const query = {
                 text: `SELECT
                         place.id,
-                        ST_AsText(place.point),
+                        ST_AsText(place.point) as point,
+                        place.description,
+                        place.title,
                         place.created,
+                        users.id as user_id,
                         users.login as user_login,
+                        category.id as category_id,
                         category.slug as category_slug,
                         category.name as category_name
                        FROM place
@@ -120,14 +139,15 @@ export default class PlaceDAO {
         }
     };
 
-    public static async getUserPlaces(pool, userId: number, limit: number, offset: number): Promise<Array<IPlace>> {
+    public static async getUserPlaces(pool, userId: number, limit: number, offset: number, desc: string): Promise<Array<IPlace>> {
         const client = await pool.connect();
         try {
             const query = {
                 text: `SELECT
                         place.id,
-                        ST_AsText(place.point),
+                        ST_AsText(place.point) as point,
                         place.description,
+                        place.title,
                         place.created,
                         category.id as category_id,
                         category.slug as category_slug,
@@ -135,6 +155,7 @@ export default class PlaceDAO {
                        FROM place
                         JOIN category ON category.id = place.category_id
                        WHERE place.creator_id = $1
+                       ORDER BY place.created ${desc}
                        LIMIT $2
                        OFFSET $3;`,
                 values: [userId, limit, offset]

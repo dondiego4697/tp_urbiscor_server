@@ -4,7 +4,7 @@ import LinkUserPlaceDAO from '../../../../src/dao/LinkUserPlaceDAO';
 import PlaceDAO from '../../../../src/dao/PlaceDAO';
 module.exports = (pool) => {
     return (req, res) => {
-        const link = new OLinkUserPlace(req.body);
+        const link = new OLinkUserPlace(req.query);
         if (!link.checkImportantData()) {
             sendData(res, WRONG_PARAMS({}));
             return;
@@ -12,7 +12,7 @@ module.exports = (pool) => {
 
         PlaceDAO.getById(pool, link.placeId).then(data => {
             if (data.length > 0) {
-                if (data[0].creator_id === link.userId) {
+                if (Number(data[0].creator_id) === Number(link.userId)) {
                     sendData(res, WRONG_PARAMS({detail: 'you are creator'}));
                     return;
                 }

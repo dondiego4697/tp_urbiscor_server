@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS public.place
     creator_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     category_id INT NOT NULL REFERENCES category(id),
     description TEXT NOT NULL,
+    title TEXT NOT NULL,
     point geography NOT NULL,
     created TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE (creator_id, category_id, point)

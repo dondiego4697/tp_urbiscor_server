@@ -3,7 +3,7 @@ import {sendData, SUCCESS, WRONG_PARAMS} from '../../../../src/support/http';
 import LinkUserPlaceDAO from '../../../../src/dao/LinkUserPlaceDAO';
 module.exports = (pool) => {
     return (req, res) => {
-        const link = new OLinkUserPlace(req.body);
+        const link = new OLinkUserPlace(req.query);
         if (!link.checkImportantData()) {
             sendData(res, WRONG_PARAMS({}));
             return;

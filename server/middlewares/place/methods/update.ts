@@ -11,7 +11,7 @@ module.exports = (pool) => {
             return;
         }
         const {userId} = req.body;
-        if (!id || !userId || !Array.isArray(place.point)) {
+        if (!id || !userId || (place.point && !Array.isArray(place.point))) {
             sendData(res, WRONG_PARAMS({}));
             return;
         }
