@@ -17,7 +17,7 @@ const pool = new Pool(
 const app = express()
     .use(bodyParser.json())
     .get('/ping', (req, res) => {
-        sendData(res, SUCCESS());
+        sendData(res, SUCCESS({data: 'server on'}));
     })
     .use('/api/user/', userMiddleware(pool))
     .use('/api/category/', categoryMiddleware(pool))
