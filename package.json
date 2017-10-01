@@ -5,6 +5,7 @@
   "main": "server/app.ts",
   "scripts": {
     "build": "tsc -w",
+    "postinstall": "tsc",
     "start": "node build/server/app.js",
     "test": "echo 0"
   },

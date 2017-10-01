@@ -1,4 +1,7 @@
-export const CONFIG = {
+interface IConfig {
+    database: object
+}
+let CONFIG: IConfig = {
     database: {
         user: 'postgres',
         host: 'localhost',
@@ -7,3 +10,7 @@ export const CONFIG = {
         port: 5432
     }
 };
+if (process.env.NODE_ENV === 'production') {
+    CONFIG.database = {connectionString: process.env.DATABASE_URL};
+}
+module.exports = CONFIG;

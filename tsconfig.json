@@ -3,13 +3,14 @@
     "module": "commonjs",
     "target": "es2015",
     "sourceMap": true,
-    "outDir": "build/server",
+    "outDir": "build/",
     "moduleResolution": "node",
     "allowJs": true,
     "baseUrl": "."
   },
   "include": [
-    "server/**/*.ts"
+    "server/**/*.ts",
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules"

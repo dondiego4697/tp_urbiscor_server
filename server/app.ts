@@ -1,10 +1,12 @@
 const PORT = process.env.PORT || 3000;
 const express = require('express');
 const bodyParser = require('body-parser');
-const {CONFIG} = require('./db-config');
+const CONFIG = require('./db-config');
 const userMiddleware = require('./middlewares/user/user');
 const categoryMiddleware = require('./middlewares/category/category');
 const placeMiddleware = require('./middlewares/place/place');
+
+import {sendData, SUCCESS} from '../src/support/http';
 
 const {Pool} = require('pg');
 
@@ -14,6 +16,9 @@ const pool = new Pool(
 
 const app = express()
     .use(bodyParser.json())
+    .get('/ping', (req, res) => {
+        sendData(res, SUCCESS());
+    })
     .use('/api/user/', userMiddleware(pool))
     .use('/api/category/', categoryMiddleware(pool))
     .use('/api/place/', placeMiddleware(pool));
