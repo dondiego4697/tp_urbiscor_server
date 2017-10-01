@@ -1,0 +1,23 @@
+{
+  "name": "tp_urbiscor_server",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server/app.ts",
+  "scripts": {
+    "build": "tsc -w",
+    "start": "node build/server/app.js",
+    "test": "echo 0"
+  },
+  "author": "Denis Stepanov dondiego4697@mail.ru",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.15.5",
+    "pg": "^7.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.30",
+    "typescript": "^2.5.2",
+    "typings": "^2.1.1"
+  }
+}
