@@ -60,4 +60,29 @@ export default class LinkUserPlaceDAO {
             client.release();
         }
     };
+
+    public static async getUserSubscriptions(pool, userId: number, limit: number, offset: number): Promise<Array<ILinkUserPlace>> {
+        const client = await pool.connect();
+        try {
+            const query = {
+                text: `SELECT
+                        place.id,
+                        ST_AsText(place.point),
+                        place.description,
+                        place.created
+                       FROM link_user_place
+                        JOIN place ON place.id = link_user_place.place_id
+                       WHERE link_user_place.user_id = $1
+                       LIMIT $2
+                       OFFSET $3;`,
+                values: [userId, limit, offset]
+            };
+            const res = await client.query(query);
+            return res.rows;
+        } catch (err) {
+            throw err;
+        } finally {
+            client.release();
+        }
+    };
 }

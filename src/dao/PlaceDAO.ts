@@ -119,4 +119,50 @@ export default class PlaceDAO {
             client.release();
         }
     };
+
+    public static async getUserPlaces(pool, userId: number, limit: number, offset: number): Promise<Array<IPlace>> {
+        const client = await pool.connect();
+        try {
+            const query = {
+                text: `SELECT
+                        place.id,
+                        ST_AsText(place.point),
+                        place.description,
+                        place.created,
+                        category.id as category_id,
+                        category.slug as category_slug,
+                        category.name as category_name
+                       FROM place
+                        JOIN category ON category.id = place.category_id
+                       WHERE place.creator_id = $1
+                       LIMIT $2
+                       OFFSET $3;`,
+                values: [userId, limit, offset]
+            };
+            const res = await client.query(query);
+            return res.rows;
+        } catch (err) {
+            throw err;
+        } finally {
+            client.release();
+        }
+    };
+
+    public static async getById(pool, id, clientZ?): Promise<Array<IPlace>> {
+        const client = clientZ || await pool.connect();
+        try {
+            const query = {
+                text: `SELECT * FROM place WHERE id=$1`,
+                values: [id]
+            };
+            const res = await client.query(query);
+            return res.rows;
+        } catch (err) {
+            throw err;
+        } finally {
+            if (!clientZ) {
+                client.release();
+            }
+        }
+    };
 }
