@@ -11,6 +11,7 @@ export default class PlaceDAO {
                         place.description,
                         place.title,
                         place.created,
+                        place.time_start,
                         users.id as user_id,
                         users.login as user_login,
                         category.id as category_id,
@@ -37,9 +38,9 @@ export default class PlaceDAO {
         const client = await pool.connect();
         try {
             const query = {
-                text: `INSERT INTO place (category_id, creator_id, description, title, point)
-                 VALUES ($1, $2, $3, $4, st_geogfromtext('POINT(${place.point[0]} ${place.point[1]})')) RETURNING *;`,
-                values: [place.categoryId, place.creatorId, place.description, place.title]
+                text: `INSERT INTO place (category_id, creator_id, description, title, time_start, point)
+                 VALUES ($1, $2, $3, $4, $5, st_geogfromtext('POINT(${place.point[0]} ${place.point[1]})')) RETURNING *;`,
+                values: [place.categoryId, place.creatorId, place.description, place.title, place.timeStart]
             };
             const res = await client.query(query);
             return res.rows;
@@ -77,21 +78,13 @@ export default class PlaceDAO {
             data.keysStr.push('point');
             data.indexStr.push(`st_geogfromtext('POINT(${updateData.point[0]} ${updateData.point[1]})')`);
         }
-        if (updateData.category_id) {
-            data.keysStr.push('category_id');
-            data.indexStr.push(`$${index++}`);
-            data.argsArr.push(updateData.category_id);
-        }
-        if (updateData.description) {
-            data.keysStr.push('description');
-            data.indexStr.push(`$${index++}`);
-            data.argsArr.push(updateData.description);
-        }
-        if (updateData.title) {
-            data.keysStr.push('title');
-            data.indexStr.push(`$${index++}`);
-            data.argsArr.push(updateData.title);
-        }
+        ['category_id', 'description', 'title', 'time_start'].forEach(key => {
+            if (updateData[key]) {
+                data.keysStr.push(key);
+                data.indexStr.push(`$${index++}`);
+                data.argsArr.push(updateData[key]);
+            }
+        });
         const client = await pool.connect();
         try {
             const query = {
@@ -116,6 +109,7 @@ export default class PlaceDAO {
                         ST_AsText(place.point) as point,
                         place.description,
                         place.title,
+                        place.time_start,
                         place.created,
                         users.id as user_id,
                         users.login as user_login,
@@ -149,6 +143,7 @@ export default class PlaceDAO {
                         place.description,
                         place.title,
                         place.created,
+                        place.time_start,
                         category.id as category_id,
                         category.slug as category_slug,
                         category.name as category_name

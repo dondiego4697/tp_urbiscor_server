@@ -16,6 +16,23 @@ export default class UserDAO {
             client.release();
         }
     };
+
+    public static async getUser(pool, user: IUser): Promise<Array<IUser>> {
+        const client = await pool.connect();
+        try {
+            const query = {
+                text: 'SELECT * FROM users WHERE login=$1 AND password=$2;',
+                values: [user.login, user.password]
+            };
+            const res = await client.query(query);
+            return res.rows;
+        } catch (err) {
+            throw err;
+        } finally {
+            client.release();
+        }
+    };
+
     public static async getById(pool, userId: number): Promise<Array<IUser>> {
         const client = await pool.connect();
         try {

@@ -10,8 +10,8 @@ API
 Name     | Type
 -------- | ---
 id		 | INT
-login    | VARCHAR(255)
-password | VARCHAR(255)
+login    | TEXT
+password | TEXT
 #### Place
 Name     | Type
 -------- | ---
@@ -21,13 +21,14 @@ description | TEXT
 point | GEOGRAPHY
 creator_id | INT
 category_id | INT
-created | DATA
+created | TIMESTAMP
+time_start | TIMESTAMP
 #### Category
 Name     | Type
 -------- | ---
 id		 | INT
-slug | VARCHAR(255)
-name | VARCHAR(255)
+slug | TEXT
+name | TEXT
 #### Link_user_place
 Name     | Type
 -------- | ---
@@ -66,7 +67,8 @@ POST /create - создать событие
 		description: string,
 	    categoryId: number,
 	    creatorId: number,
-	    point: Array[2]<number>
+	    point: Array[2]<number>,
+	    timeStart: string // ex: 2007-10-04T23:08:10.0
 	}
 GET /get-all- все события
 ```/?limit&offset&desc```
@@ -99,6 +101,7 @@ POST /update - обновить
 	    description: string,
 	    title: string,
 	    categoryId: number,
-	    point: Array[2]<number>
+	    point: Array[2]<number>,
+	    timeStart: string // ex: 2007-10-04T23:08:10.0
 	}
 
