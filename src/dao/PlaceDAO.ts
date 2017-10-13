@@ -21,7 +21,7 @@ export default class PlaceDAO {
                        FROM place
                        JOIN users ON users.id = place.creator_id
                        JOIN category ON category.id = place.category_id
-                        ${category ? 'WHERE category.name = $3' : ''}                        
+                        ${category ? 'WHERE category.slug = $3' : ''}                        
                         ORDER BY place.created ${desc}
                         LIMIT $1
                         OFFSET $2`,
@@ -126,7 +126,7 @@ export default class PlaceDAO {
                         JOIN users ON users.id = place.creator_id
                         JOIN category ON category.id = place.category_id
                        WHERE ST_DWithin(point, ST_GeographyFromText('POINT(${point[0]} ${point[1]})'), $3)
-                       ${category ? 'AND category.name = $4' : ''}                        
+                       ${category ? 'AND category.slug = $4' : ''}                        
                        LIMIT $1
                        OFFSET $2`,
                 values: (() => {
