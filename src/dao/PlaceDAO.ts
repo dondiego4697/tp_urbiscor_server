@@ -1,7 +1,8 @@
 import {IPlace} from "../models/Place";
 
 export default class PlaceDAO {
-    public static async getAll(pool, limit: number, offset: number, desc: string): Promise<Array<IPlace>> {
+    public static async getAll(pool, limit: number, offset: number, category: string, desc: string): Promise<Array<IPlace>> {
+        desc = desc ? 'DESC' : '';
         const client = await pool.connect();
         try {
             const query = {
@@ -20,10 +21,15 @@ export default class PlaceDAO {
                        FROM place
                        JOIN users ON users.id = place.creator_id
                        JOIN category ON category.id = place.category_id
+                        ${category ? 'WHERE category.name = $3' : ''}                        
                         ORDER BY place.created ${desc}
                         LIMIT $1
                         OFFSET $2`,
-                values: [limit, offset]
+                values: (() => {
+                    let result: Array<any> = [limit, offset];
+                    category ? result.push(category) : null;
+                    return result;
+                })()
             };
             const res = await client.query(query);
             return res.rows;
@@ -100,7 +106,7 @@ export default class PlaceDAO {
         }
     };
 
-    public static async getAround(pool, point: Array<number>, limit: number, offset: number, step: number): Promise<Array<IPlace>> {
+    public static async getAround(pool, point: Array<number>, limit: number, offset: number, step: number, category: string): Promise<Array<IPlace>> {
         const client = await pool.connect();
         try {
             const query = {
@@ -120,9 +126,14 @@ export default class PlaceDAO {
                         JOIN users ON users.id = place.creator_id
                         JOIN category ON category.id = place.category_id
                        WHERE ST_DWithin(point, ST_GeographyFromText('POINT(${point[0]} ${point[1]})'), $3)
+                       ${category ? 'AND category.name = $4' : ''}                        
                        LIMIT $1
                        OFFSET $2`,
-                values: [limit, offset, step]
+                values: (() => {
+                    let result: Array<any> = [limit, offset, step];
+                    category ? result.push(category) : null;
+                    return result;
+                })()
             };
             const res = await client.query(query);
             return res.rows;

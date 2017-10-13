@@ -71,13 +71,13 @@ POST /create - создать событие
 	    timeStart: string // ex: 2007-10-04T23:08:10.0
 	}
 GET /get-all- все события
-```/?limit&offset&desc```
+```/?limit&offset&desc&category```
 
 GET /get-subscribers/:placeId - получить пользователей, подписанных на событие
 ```/?limit&offset```
 
 GET /get-around- получить события, которые находятся в диапазоне заданной точки 
-```/?lat&lng&limit&offset&step```
+```/?lat&lng&limit&offset&step&category```
 step - значение в метрах, указывающее в каком диапазоне искать
 	
 GET /subscribe - подписаться на событие
