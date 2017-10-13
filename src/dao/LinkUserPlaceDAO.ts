@@ -71,6 +71,7 @@ export default class LinkUserPlaceDAO {
                         place.description,
                         place.title,
                         place.created,
+                        place.subscribers,
                         place.time_start,
                         category.id as category_id,
                         category.name as category_name,

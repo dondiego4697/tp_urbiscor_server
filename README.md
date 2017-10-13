@@ -21,6 +21,7 @@ description | TEXT
 point | GEOGRAPHY
 creator_id | INT
 category_id | INT
+subscribers | INT
 created | TIMESTAMP
 time_start | TIMESTAMP
 #### Category
