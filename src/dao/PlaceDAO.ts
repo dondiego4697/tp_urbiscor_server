@@ -1,4 +1,6 @@
 import {IPlace} from "../models/Place";
+const RETURNING_PLACE = `place.id, place.creator_id, place.category_id, place.description, place.title, place.created, place.time_start, 
+                place.subscribers, ST_AsText(place.point) as point`;
 
 export default class PlaceDAO {
     public static async getAll(pool, limit: number, offset: number, category: string, desc: string): Promise<Array<IPlace>> {
@@ -46,7 +48,7 @@ export default class PlaceDAO {
         try {
             const query = {
                 text: `INSERT INTO place (category_id, creator_id, description, title, time_start, point)
-                 VALUES ($1, $2, $3, $4, $5, st_geogfromtext('POINT(${place.point[0]} ${place.point[1]})')) RETURNING *;`,
+                 VALUES ($1, $2, $3, $4, $5, st_geogfromtext('POINT(${place.point[0]} ${place.point[1]})')) RETURNING ${RETURNING_PLACE};`,
                 values: [place.categoryId, place.creatorId, place.description, place.title, place.timeStart]
             };
             const res = await client.query(query);
@@ -62,7 +64,7 @@ export default class PlaceDAO {
         const client = await pool.connect();
         try {
             const query = {
-                text: `DELETE FROM place WHERE id = $1 AND creator_id = $2 RETURNING *;`,
+                text: `DELETE FROM place WHERE id = $1 AND creator_id = $2 RETURNING ${RETURNING_PLACE};`,
                 values: [id, userId]
             };
             const res = await client.query(query);
@@ -95,7 +97,8 @@ export default class PlaceDAO {
         const client = await pool.connect();
         try {
             const query = {
-                text: `UPDATE place SET (${data.keysStr.join(', ')})=(${data.indexStr.join(', ')}) WHERE id=$1 AND creator_id=$2 RETURNING *;`,
+                text: `UPDATE place SET (${data.keysStr.join(', ')})=(${data.indexStr.join(', ')}) 
+                WHERE id=$1 AND creator_id=$2 RETURNING ${RETURNING_PLACE};`,
                 values: data.argsArr
             };
             const res = await client.query(query);
