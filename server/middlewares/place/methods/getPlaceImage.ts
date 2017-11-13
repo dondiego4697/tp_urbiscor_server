@@ -10,7 +10,7 @@ module.exports = (req, res) => {
 
     fs.readFile(`${__dirname}/../../../../../places-image/place${placeId}.jpg`, (err, data) => {
         if (err) {
-            sendData(res, WRONG_PARAMS(err));
+            sendData(res, WRONG_PARAMS({}));
             return;
         }
 
