@@ -71,6 +71,12 @@ POST /create - создать событие
 	    point: Array[2]<number>,
 	    timeStart: string // ex: 2007-10-04T23:08:10.0
 	}
+
+POST /upload-image/:placeId - загрузка изображения
+```form-data: placeImage: File```
+
+GET /get-image/:placeId - получить изображение
+
 GET /get-all- все события
 ```/?limit&offset&desc&category```
 
