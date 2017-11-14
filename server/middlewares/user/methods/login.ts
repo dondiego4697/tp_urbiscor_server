@@ -17,7 +17,9 @@ module.exports = (pool) => {
                     token: code({
                         login: data[0].login,
                         password: data[0].password
-                    })
+                    }),
+                    id: data[0].id,
+                    login: data[0].login
                 }));
             } else {
                 sendData(res, WRONG_PARAMS({}));
